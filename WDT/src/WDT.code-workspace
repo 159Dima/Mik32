@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../../Downloads/Telegram Desktop/shared_V2"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"wdt.h": "c",
+			"mcu32_memory_map.h": "c",
+			"power_manager.h": "c",
+			"uart_lib.h": "c",
+			"wdt_on.h": "c"
+		}
+	}
+}

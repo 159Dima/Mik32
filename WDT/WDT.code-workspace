@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../../.platformio/packages/framework-mik32v0-sdk/hal"
+		},
+		{
+			"name": "WDT_bus",
+			"path": "../WDT_bus"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"wdt.h": "c",
+			"mcu32_memory_map.h": "c",
+			"power_manager.h": "c",
+			"uart_lib.h": "c",
+			"wdt_on.h": "c",
+			"inttypes.h": "c",
+			"mik32_hal_rcc.h": "c",
+			"wakeup.h": "c",
+			"xprintf.h": "c",
+			"mik32_hal_pad_config.h": "c",
+			"mik32_hal_gpio.h": "c",
+			"pad_config.h": "c",
+			"mik32_hal_def.h": "c",
+			"scr1_timer.h": "c",
+			"common.h": "c"
+		}
+	}
+}
