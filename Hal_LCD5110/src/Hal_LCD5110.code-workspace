@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../lcd"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"mik32_hal_rtc.h": "c",
+			"wakeup.h": "c",
+			"main.h": "c",
+			"mik32_hal_rcc.h": "c",
+			"common.h": "c",
+			"epic.h": "c",
+			"mcu32_memory_map.h": "c",
+			"mik32_hal_pcc.h": "c",
+			"mik32_hal_gpio.h": "c",
+			"mik32_hal_spi.h": "c",
+			"mik32_hal_lcd5100.h": "c",
+			"xprintf.h": "c",
+			"uart_lib.h": "c",
+			"stdarg.h": "c"
+		}
+	}
+}

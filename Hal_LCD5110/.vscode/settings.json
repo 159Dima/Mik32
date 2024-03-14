@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "mik32_hal_spi.h": "c",
+        "mik32_hal_pcc.h": "c",
+        "stddef.h": "c",
+        "mik32_hal_gpio.h": "c",
+        "power_manager.h": "c",
+        "mik32_hal_def.h": "c",
+        "mcu32_memory_map.h": "c",
+        "mik32_hal_lcd5100.h": "c"
+    }
+}
