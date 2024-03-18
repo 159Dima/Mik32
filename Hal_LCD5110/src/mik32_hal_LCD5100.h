@@ -87,8 +87,6 @@ typedef enum{
     transfer_x_and_step_y       = 0b00000100,
 } Transfer_When_End;
 
-
-
 typedef struct __HAL_LCD5110_Option{
     int8_t Xcoord;/* стартовая координата записи по x*/
     int8_t Yoffset;/* смещение по y*/
@@ -101,23 +99,50 @@ typedef struct __HAL_LCD5110_Option{
 }HAL_LCD5110_Option;
 
 typedef struct __HAL_LCD5110_Settings{
-    Display_Configuration display;/*режим рабюоты дисплея*/
-    Temperature_Coefficient temperature;/*установка температурного коэфффицента*/
+    /// @brief режим работы дисплея
+    /// @param display_blank 
+    /// @param normal_mode 
+    /// @param all_segments_on 
+    /// @param inverse_mode 
+    Display_Configuration display;
+    /// @brief температурный коэффицент
+    /// @param TC_0
+    /// @param TC_1
+    /// @param TC_2
+    /// @param TC_3
+    Temperature_Coefficient temperature;
+    /// @brief  
+    /// @param  BS0
+    /// @param  BS1 
+    /// @param  BS3
     Bias_System bias;
+    /// @brief режим вывода не дисплей
+    /// @param horizontal_addressing горизонтальный 
+    /// @param vertical_addressing вертикальный(не потдерживается библиотекой)
     Entry_Mode entry;
+    /// @brief On/Off
+    /// @param chip_active 
+    /// @param chip_power_down 
     Power_Down_Control control;
+    /// @brief  контраст
+    /// @param  contrast от 0 до 127
     uint8_t contrast;
 }HAL_LCD5110_Settings;
 
 typedef struct __HAL_LCD5110_Port{
-    GPIO_TypeDef *GPIO; 
-    GPIO_InitTypeDef PIN;
+    GPIO_TypeDef *GPIO; /*указатель на GPIO*/
+    GPIO_InitTypeDef PIN; /*настройки порта*/
 }HAL_LCD5110_Port;
 
 typedef struct LCD5110_HandleTypeDef
 {
-    HAL_LCD5110_Option option;
-    HAL_LCD5110_Settings settings;
+    HAL_LCD5110_Option option;/* не трогать*/
+    HAL_LCD5110_Settings settings;// настройки дисплея менять полсе инициализации диспле. после вызвать функцию HAL_LCD5110_Reset().
+    /// @brief выбор настроек переноса строки или их комбинаций
+    /// @param transfer_off переносы выключены
+    /// @param transfer_x_on (++x = x_max) -> x = x_min 
+    /// @param transfer_y_on (++y = y_max) -> y = y_min 
+    /// @param transfer_x_and_step_y (++x = x_max) -> x = x_min, ++y. не комбенируется с  transfer_x_on
     Transfer_When_End transfer;
     uint8_t *buffer;/* указатль на массив*/
     SPI_HandleTypeDef *Spi;/* указатель на SPI*/
@@ -127,29 +152,29 @@ typedef struct LCD5110_HandleTypeDef
 
 }LCD5110_HandleTypeDef;
 
-/// @brief 
-/// @param LCD 
-/// @param data 
-/// @param DataSize 
-/// @param mode 
-/// @return 
+/// @brief выводим данные на дисплей
+/// @param LCD указатель на структуру дисплея
+/// @param data массив данных
+/// @param DataSize конец пересылаемого массива
+/// @param mode посылеем дисплею: 0 - команду. 1 - данные
+/// @return возвращает код ошибки 
 HAL_StatusTypeDef HAL_LCD5110_Write_(LCD5110_HandleTypeDef* LCD, uint8_t data[], uint32_t DataSize, uint8_t mode);
 
-/// @brief 
-/// @param LCD 
-/// @return 
+/// @brief функция перезаписи настроек дисплея
+/// @param LCD указатель на структуру дисплея
+/// @return возвращает код ошибки
 HAL_StatusTypeDef HAL_LCD5110_Reset(LCD5110_HandleTypeDef* LCD);
 
-/// @brief 
-/// @param LCD 
-/// @return 
+/// @brief фонкция инициализации димплея/портов
+/// @param LCD указатель на структуру дисплея
+/// @return возвращает код ошибки
 HAL_StatusTypeDef HAL_LCD5110_Init(LCD5110_HandleTypeDef* LCD);
 
-/// @brief 
-/// @param LCD 
-/// @param x 
-/// @param row 
-/// @param  
+/// @brief функция установки координат
+/// @param LCD указатель на структуру дисплея
+/// @param x координаты столбца
+/// @param row координаты строки
+/// @param y_offset обязательно!! указать смещение по y при использование буффера defolt = 0
 void HAL_LCD5110_Set_Coord(LCD5110_HandleTypeDef* LCD, uint8_t x, uint8_t row, ...);
 
 /// @brief 
@@ -160,28 +185,52 @@ void HAL_LCD5110_Set_Coord(LCD5110_HandleTypeDef* LCD, uint8_t x, uint8_t row, .
 /// @param row_max 
 void HAL_LCD5110_Set_Boundaries(LCD5110_HandleTypeDef* LCD, uint8_t x_min, uint8_t row_min, uint8_t x_max, uint8_t row_max);
 
-/// @brief 
-/// @param LCD 
+/// @brief выводит буффер на дисплей
+/// @param LCD указатель на структуру дисплея
 void HAL_LCD5110_updete(LCD5110_HandleTypeDef* LCD);
 
-/// @brief 
-/// @param LCD 
+/// @brief без буфера: заполняет дисплей
+/// @brief с буффером: заполняет буффер и выводит его
+/// @param LCD указатель на структуру дисплея
 void HAL_LCD5110_Fill(LCD5110_HandleTypeDef* LCD);
 
-/// @brief 
-/// @param LCD 
+/// @brief без буфера: очищает дисплей
+/// @brief с буффером: очищает буффер и выводит его
+/// @param LCD указатель на структуру дисплея
 void HAL_LCD5110_Clear(LCD5110_HandleTypeDef* LCD);
 
-/// @brief 
-/// @param LCD 
-/// @param str 
-/// @param  
+/// @brief без буфера: выводит на дисплей строку. 
+/// @brief с буффером: записывает элементы строки в буфер по координатам. 
+/// @brief после использования координаты дисплея равны концу выхода массива.  
+/// @param LCD указатель на структуру дисплея
+/// @param str строка "..."
+/// @param  "%d" вывесли int число (LCD ,"%d" , a ); 
+/// @param  "\\n" переход на следующую строку 
 void HAL_LCD5110_Print(LCD5110_HandleTypeDef* LCD, char * str, ...);
 
-/// @brief 
-/// @param LCD 
-/// @param str 
-/// @param  
+/// @brief без буфера: очищает область куда выводиться строка. 
+/// @brief с буффером: удаляет элементы строки из буфера по координатам. 
+/// @brief после использования координаты дисплея равны концу выхода массива.  
+/// @param LCD указатель на структуру дисплея
+/// @param str строка "..."
+/// @param  "%d" вывесли int число (LCD ,"%d" , a ); 
+/// @param  "\n" переход на следующую строку 
 void HAL_LCD5110_Delete(LCD5110_HandleTypeDef* LCD, char * str, ...);
 
+/// @brief без буфера: выводит на дисплей массив. 
+/// @brief с буффером: записывает элементы массива в буфер по координатам. 
+/// @brief после использования координаты дисплея равны концу выхода массива. 
+/// @param LCD указатель на структуру дисплея
+/// @param mas указатель на массив
+/// @param columns количество колонок в массиае
+/// @param size_mas количество элементов в массиве
 void HAL_LCD5110_Print_mas(LCD5110_HandleTypeDef* LCD, uint8_t  *mas, uint16_t columns, uint16_t size_mas);
+
+/// @brief без буфера: очищает область куда выводиться массив. 
+/// @brief с буффером: удаляет элементы массива из буфера по координатам. 
+/// @brief после использования координаты дисплея равны концу выхода массива. 
+/// @param LCD указатель на структуру дисплея
+/// @param mas указатель на массив
+/// @param columns количество колонок в массиае
+/// @param size_mas количество элементов в массиве
+void HAL_LCD5110_Delete_mas(LCD5110_HandleTypeDef* LCD, uint8_t  *mas, uint16_t columns, uint16_t size_mas);
