@@ -363,33 +363,7 @@ void LCD5110_Print_mas(LCD5110Struct *LCD,uint8_t  *mas, uint8_t x_, uint16_t si
     }
     else
     {
-        do
-        {
-            x = LCD->x_coord;
-            for(int8_t i = 0; i < x_ && (size_ - line*x_ - i)>0 ;i++)
-            {
-                *(LCD->buffer + row*84 + x) |= (*(mas+line*x_+i) << y );
-                x++;
-            }
-             if(y>0)
-            {
-                row++;
-                if(row>LCD->rE)break;
-                x = LCD->x_coord;
-                for(int8_t i = 0; i< x_ && (size_ - line*x_ - i)>0 ;i++)
-                {
-                *(LCD->buffer + row*84 + x) |= ((*(mas+line*x_ + i) >> (8-y)));
-                x++;
-                }
-                line++;
-            }
-            else
-            {  
-            line++;
-            if((size_ - line*x_)>0)  row++;
-            if(row>LCD->rE)break;
-            }
-        }while((size_ - line*x_)>0);      
+ 
     }
     if(y>0)row--;
     LCD->y_coord = y;
